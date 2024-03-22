@@ -1,6 +1,7 @@
 {
   "name": "@timsexperiments/ts-plugin-workers",
   "main": "dist/index.js",
+  "version": "0.1.0",
   "scripts": {
     "build": "tsc",
     "build:future": "bun build src/index.ts --outdir dist --format cjs"
