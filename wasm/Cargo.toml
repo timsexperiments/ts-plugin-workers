@@ -1,0 +1,16 @@
+[package]
+name = "ts-plugin-workers-wasm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+console_error_panic_hook = "0.1.7"
+serde = { version = "1.0.197", features = ["derive"] }
+toml = "0.8.10"
+wasm-bindgen = { version = "0.2.91", features = ["serde"] }
+web-sys = { version = "0.3.69", features = ["console"] }
+
+[lib]
+crate-type = ["cdylib"]

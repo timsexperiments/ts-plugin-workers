@@ -1,0 +1,20 @@
+{
+  "name": "@timsexperiments/ts-plugin-workers-wasm",
+  "version": "0.1.0",
+  "files": [
+    "pkg/ts_plugin_workers_wasm_bg.wasm",
+    "pkg/ts_plugin_workers_wasm.js",
+    "pkg/ts_plugin_workers_wasm.d.ts"
+  ],
+  "main": "pkg/ts_plugin_workers_wasm.js",
+  "types": "pkg/ts_plugin_workers_wasm.d.ts",
+  "scripts": {
+    "build": "wasm-pack build --target nodejs"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
