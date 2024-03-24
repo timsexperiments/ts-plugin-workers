@@ -1,21 +1,50 @@
 name: CI
 
 on:
+  push:
+    branches: ['main']
   pull_request:
     branches: ['**']
 
 jobs:
-  build-and-lint:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
-      - name: Install dependencies with Bun
-        run: bun install
-      - name: Build project
-        run: bun run build
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Build @timsexperiments/ts-plugin-workers/wasm
+        run: |
+          cd wasm
+          bun install --frozen-lockfile
+          bun run build
+
+      - name: Build @timsexperiments/ts-plugin-workers
+        run: |
+          cd ../ts-plugin-workers
+          bun install --frozen-lockfile
+          bun run build
+
+      - name: Setup example project
+        run: |
+          cd example
+          bun install --frozen-lockfile
+
       - name: Lint with ESLint
-        run: bun run lint
+        run: |
+          cd ts-plugin-workers
+          bun run lint
+
       - name: Check formatting with Prettier
-        run: bun run format-check
+        run: |
+          cd ts-plugin-workers
+          bun run format-check
