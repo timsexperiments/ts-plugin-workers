@@ -28,8 +28,12 @@ jobs:
       - name: Build @timsexperiments/ts-plugin-workers/wasm
         run: |
           cd wasm
-          cargo test
           bun run build
+
+      - name: Test @timsexperiments/ts-plugin-workers/wasm
+        run: |
+          cd wasm
+          cargo test
 
       - name: Build @timsexperiments/ts-plugin-workers
         run: |
