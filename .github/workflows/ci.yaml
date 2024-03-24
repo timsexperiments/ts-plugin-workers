@@ -23,7 +23,7 @@ jobs:
         uses: oven-sh/setup-bun@v1
 
       - name: Install Wasm-pack for the wasm project
-        run: cargo install -g wasm-pack
+        run: cargo install wasm-pack
 
       - name: Build @timsexperiments/ts-plugin-workers/wasm
         run: |
