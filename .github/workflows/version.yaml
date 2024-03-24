@@ -1,0 +1,67 @@
+name: Version Bump Check
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, labeled, unlabeled]
+
+jobs:
+  check-version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v2
+
+      - name: Check for 'skip-version-bump' label
+        id: check_label
+        run: |
+          LABEL=$(echo '${{ join(github.event.pull_request.labels.*.name) }}' | grep -o 'skip-version-bump' || true)
+          if [[ "$LABEL" == "skip-version-bump" ]]; then
+            echo "::set-output name=SKIP::yes"
+          else
+            echo "::set-output name=SKIP::no"
+          fi
+
+      - name: Get base branch version
+        if: steps.check_label.outputs.SKIP != 'yes'
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          echo "BASE_VERSION=$(git show origin/main:package.json | node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Get PR branch version
+        if: steps.check_label.outputs.SKIP != 'yes'
+        run: echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      - name: Compare versions
+        id: compare_versions
+        if: steps.check_label.outputs.SKIP != 'yes'
+        run: |
+          function version { echo "$@" | awk -F. '{ printf("%d%03d%03d", $1,$2,$3); }'; }
+          if [ $(version $PR_VERSION) -le $(version $BASE_VERSION) ]; then
+            echo "VERSION_CHANGE_NEEDED=true" >> $GITHUB_ENV
+            echo "The version in package.json must be incremented."
+          else
+            echo "VERSION_CHANGE_NEEDED=false" >> $GITHUB_ENV
+
+      - name: Add comment if version bump is needed
+        if: env.VERSION_CHANGE_NEEDED == 'true'
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const message = `
+              :warning: The version in package.json has not been incremented.
+              If this is intentional, please add the \`skip-version-bump\` label to this PR.
+            `;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: message
+            })
+            console.log("Comment added to the PR.");
+
+      - name: Fail the workflow if version bump is needed
+        if: env.VERSION_CHANGE_NEEDED == 'true'
+        run: |
+          echo "Error: The version in package.json has not been incremented. Please increment the version or add the 'skip-version-bump' label to this PR."
+          exit 1
