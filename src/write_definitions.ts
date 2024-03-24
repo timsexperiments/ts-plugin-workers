@@ -1,7 +1,7 @@
-import { WorkerBindingGenerator } from '@timsexperiments/ts-plugin-workers-wasm';
+import type { WorkerBindingGenerator } from '@timsexperiments/ts-plugin-workers-wasm';
 import fs from 'fs';
 import path from 'path';
-import ts from 'typescript/lib/typescript';
+import type ts from 'typescript/lib/typescript';
 
 export function writeDefinitions(
   project: ts.server.Project,
@@ -29,7 +29,7 @@ export function writeDefinitions(
   if (result.should_update()) {
     const outFile = path.resolve(project.getCurrentDirectory(), outFileName);
     try {
-      fs.writeFileSync(outFile, result.definitions() + '\n\nexport {};');
+      fs.writeFileSync(outFile, result.definitions() + '\nexport {};\n');
     } catch (e) {
       logger.info('An error ocurrecd wile running the wasm module - ' + e);
     }

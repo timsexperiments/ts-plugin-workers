@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Install Wasm-pack for the wasm project
+        run: cargo install wasm-pack
+
+      - name: Build @timsexperiments/ts-plugin-workers/wasm
+        run: |
+          cd wasm
+          bun run build
+
+      - name: Test @timsexperiments/ts-plugin-workers/wasm
+        run: |
+          cd wasm
+          cargo test
+
+      - name: Build @timsexperiments/ts-plugin-workers
+        run: |
+          bun install --frozen-lockfile
+          bun run build
+
+      - name: Setup example project
+        run: |
+          cd example
+          bun install --frozen-lockfile
+
+      - name: Lint with ESLint
+        run: |
+          bun run lint
+
+      - name: Check formatting with Prettier
+        run: |
+          bun run format:check
