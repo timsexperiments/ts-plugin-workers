@@ -33,7 +33,6 @@ jobs:
 
       - name: Build @timsexperiments/ts-plugin-workers
         run: |
-          cd ../ts-plugin-workers
           bun install --frozen-lockfile
           bun run build
 
@@ -44,10 +43,8 @@ jobs:
 
       - name: Lint with ESLint
         run: |
-          cd ts-plugin-workers
           bun run lint
 
       - name: Check formatting with Prettier
         run: |
-          cd ts-plugin-workers
           bun run format-check
