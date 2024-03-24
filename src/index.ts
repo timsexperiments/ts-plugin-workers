@@ -1,7 +1,7 @@
 import { WorkerBindingGenerator } from '@timsexperiments/ts-plugin-workers-wasm';
 import fs from 'fs';
 import path from 'path';
-import ts from 'typescript/lib/tsserverlibrary';
+import type ts from 'typescript/lib/tsserverlibrary';
 import { writeDefinitions } from './write_definitions';
 
 type Config = {
@@ -10,9 +10,7 @@ type Config = {
   person: string;
 };
 
-function init(modules: { typescript: typeof ts }) {
-  const ts = modules.typescript;
-
+function init(_modules: { typescript: typeof ts }) {
   function create(info: ts.server.PluginCreateInfo) {
     const project = info.project;
     const { config = 'wrangler.toml', out = 'bindings.d.ts' } =

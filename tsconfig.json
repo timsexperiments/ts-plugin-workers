@@ -25,6 +25,5 @@
     "esModuleInterop": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["example"]
+  "include": ["src/**/*", "eslint.config.mjs"]
 }

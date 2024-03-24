@@ -47,11 +47,11 @@ declare global {
 
 ## Contributing
 
-Please see the CONTRIBUTING.md file for detailed instructions on how to contribute to this project.
+Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for detailed instructions on how to contribute to this project.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
 
 ## Project Status
 
@@ -59,8 +59,8 @@ The project is currently in beta. It works for specific use cases but might not 
 
 ## Technical Details
 
-For VS Code users, you will need to select to use the workspace version of TypeScript for both usage and contribution, especially for debugging.
+For VS Code users, you will need to select to use the workspace version of TypeScript for both usage and contribution, especially for debugging. To select the TypeScript version in vs code open the command palette, select "TypeScript: Select TypeScript Version...", and choose "Use Workspace Version".
 
 ## Examples
 
-Check out the examples/ folder within the repository for a sample project demonstrating how to use @timsexperiments/ts-plugin-workers.
+Check out the [example/ folder](/example) within the repository for a sample project demonstrating how to use the plugin.
