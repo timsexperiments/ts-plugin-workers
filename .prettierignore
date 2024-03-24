@@ -1,6 +1,6 @@
-wasm/
+example/bindings.d.ts
 dist/
-out/
 pkg/
+node_modules/
 target/
-example/binding.d.ts
+wasm/

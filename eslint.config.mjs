@@ -1,6 +1,6 @@
 import typeScriptEslint from '@typescript-eslint/eslint-plugin';
 import parser from '@typescript-eslint/parser';
-import prettierRecommended from 'eslint-config-prettier';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
@@ -27,5 +27,5 @@ export default [
       ],
     },
   },
-  prettierRecommended,
+  eslintPluginPrettierRecommended,
 ];

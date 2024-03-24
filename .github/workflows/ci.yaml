@@ -28,7 +28,7 @@ jobs:
       - name: Build @timsexperiments/ts-plugin-workers/wasm
         run: |
           cd wasm
-          bun install --frozen-lockfile
+          cargo test
           bun run build
 
       - name: Build @timsexperiments/ts-plugin-workers
@@ -47,4 +47,4 @@ jobs:
 
       - name: Check formatting with Prettier
         run: |
-          bun run format-check
+          bun run format:check
