@@ -15,6 +15,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Check Version
-        uses: .github/actions/version-check
+        uses: ./.github/actions/version-check
         with:
           base_path: 'wasm'
