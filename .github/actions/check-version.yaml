@@ -1,0 +1,75 @@
+name: 'Check Version Update'
+description: 'Check for version bumps and handle skip-version-bump label.'
+inputs:
+  base_path:
+    description: 'Base path where the package.json file is located.'
+    required: false
+    default: '.'
+runs:
+  using: 'composite'
+  steps:
+    - name: Check for 'skip-version-bump' label
+      id: check_label
+      shell: bash
+      run: |
+        LABEL=$(echo '${{ join(github.event.pull_request.labels.*.name) }}' | grep -o 'skip-version-bump' || true)
+        if [[ "$LABEL" == "skip-version-bump" ]]; then
+          echo "Skip version bump label found. Exiting."
+          echo "::set-output name=SKIP::yes"
+        else
+          echo "::set-output name=SKIP::no"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get base branch version
+      if: steps.check_label.outputs.SKIP != 'yes'
+      shell: bash
+      run: |
+        git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+        echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:${{ inputs.base_path }}/package.json | node -p "require('${{ inputs.base_path }}/package.json').version")" >> $GITHUB_ENV
+        echo "Base version was $BASE_VERSION"
+
+    - name: Get PR branch version
+      if: steps.check_label.outputs.SKIP != 'yes'
+      shell: bash
+      run: |
+        echo "PR_VERSION=$(node -p "require('${{ inputs.base_path }}/package.json').version")" >> $GITHUB_ENV
+        echo "Base version was $BASE_VERSION"
+        echo "PR version was $BASE_VERSION"
+
+    - name: Check if version is incremented
+      if: steps.check_label.outputs.SKIP != 'yes'
+      shell: bash
+      run: |
+        function version { echo "$@" | awk -F. '{ printf("%d%03d%03d", $1,$2,$3); }'; }
+        if [ $(version $PR_VERSION) -le $(version $BASE_VERSION) ]; then
+          echo "Error: The version in package.json has not been incremented."
+          exit 1
+        else
+          echo "Version incremented in package.json. Exiting."
+          exit 0
+
+    - name: Add comment if version is not incremented
+      if: ${{ failure() }}
+      shell: bash
+      run: |
+        MESSAGE="Error: The version in package.json has not been incremented."
+        echo $MESSAGE
+        echo "MESSAGE=$MESSAGE" >> $GITHUB_ENV
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Post comment
+      if: ${{ failure() }}
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          const message = process.env.MESSAGE;
+          github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            body: message
+          });
