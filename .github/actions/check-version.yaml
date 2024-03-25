@@ -1,12 +1,12 @@
-name: 'Check Version Update'
-description: 'Check for version bumps and handle skip-version-bump label.'
+name: "Check Version Update"
+description: "Check for version bumps and handle skip-version-bump label."
 inputs:
   base_path:
-    description: 'Base path where the package.json file is located.'
+    description: "Base path where the package.json file is located."
     required: false
-    default: '.'
+    default: "."
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Check for "skip-version-bump" label
       id: check_label
