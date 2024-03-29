@@ -55,10 +55,15 @@ pub struct GenerateDefinitionsResponse {
 
 #[wasm_bindgen]
 impl GenerateDefinitionsResponse {
+    /// The string version of the typedef file.
     pub fn definitions(&self) -> String {
         self.definitions.to_owned()
     }
 
+    /// Whether the definitions have changed and should be updated.
+    ///
+    /// This is set when calling the generate_definitions function and applies
+    /// to the previous call to the function.
     pub fn should_update(&self) -> bool {
         self.should_update
     }
