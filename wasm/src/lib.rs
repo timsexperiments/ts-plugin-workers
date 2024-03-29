@@ -12,6 +12,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsValue;
 use workers::parse_toml;
 
+/// Generator for creating TypeScript type definitions based off of Cloudflare Worker Configs.
 #[wasm_bindgen]
 pub struct WorkerBindingGenerator {
     previous_definitions: String,
