@@ -43,8 +43,9 @@ jobs:
         shell: bash
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
-          function version { { IFS=. read -r major minor patch <<< "$1"; minor=$(printf "%05d" "$minor"); patch=$(printf "%05d" "$patch"); echo $major$minor$patch; } }
-          if [ $(version $PR_VERSION) -le $(version $BASE_VERSION) ]; then
+          COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
+          COMPARABLE_PR_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $PR_VERSION)
+          if ($GITHUB_WORKSPACE/scripts/ci/is_version_bump.sh $COMPARABLE_BASE_VERSION $COMPARABLE_PR_VERSION); then
             echo "Error: The version in package.json has not been incremented."
             exit 1
           else
