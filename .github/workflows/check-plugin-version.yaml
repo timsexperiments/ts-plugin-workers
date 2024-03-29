@@ -23,27 +23,27 @@ jobs:
           SKIP_VERSION_BUMP=${{contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
           if $SKIP_VERSION_BUMP; then
             echo "Skip version check label found."
-            echo "SKIP=true" >> $GITHUB_ENV
+            echo "CONTINUE=false" >> $GITHUB_OUTPUT
           else
-            echo "SKIP=false" >> $GITHUB_ENV
+            echo "CONTINUE=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Get base branch version
-        if: ${{ ! env.SKIP }}
         shell: bash
+        if: ${{ steps.check_label.outputs.CONTINUE }}
         run: |
           git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:package.json | node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Get PR branch version
-        if: ${{ ! env.SKIP }}
         shell: bash
+        if: ${{ steps.check_label.outputs.CONTINUE }}
         run: |
           echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Check if version is bumped
-        if: ${{ ! env.SKIP }}
         shell: bash
+        if: ${{ steps.check_label.outputs.CONTINUE }}
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
           COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
