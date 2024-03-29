@@ -52,6 +52,7 @@ jobs:
           else
             echo "Version incremented in package.json. Exiting."
             exit 0
+          fi
 
       - name: Add comment if version is not incremented
         if: ${{ failure() }}
