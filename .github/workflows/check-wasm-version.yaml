@@ -11,6 +11,8 @@ on:
 jobs:
   version-check:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2
 
@@ -68,8 +70,6 @@ jobs:
       - name: Post comment
         if: ${{ failure() }}
         uses: actions/github-script@v5
-        permissions:
-          pull-requests: write
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
