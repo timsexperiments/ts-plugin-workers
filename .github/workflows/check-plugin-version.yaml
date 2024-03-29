@@ -18,34 +18,36 @@ jobs:
         id: check_label
         shell: bash
         run: |
-          LABEL=$(echo "${{ join(github.event.pull_request.labels.*.name) }}" | grep -o "skip-version-bump" || true)
-          if [[ "$LABEL" == "skip-version-bump" ]]; then
+          SKIP_VERSION_BUMP=contains( github.event.pull_request.labels.*.name, 'skip-version-bump')
+          if SKIP_VERSION_BUMP; then
             echo "Skip version bump label found. Exiting."
-            exit 0
+            echo "SKIP=true" >> $GITHUB_ENV
+          else
+            echo "SKIP=false" >> $GITHUB_ENV
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get base branch version
+        if: ${{ ! env.SKIP }}
         shell: bash
         run: |
           git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:package.json | node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Get PR branch version
+        if: ${{ ! env.SKIP }}
         shell: bash
         run: |
           echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Check if version is incremented
+        if: ${{ ! env.SKIP }}
         shell: bash
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
           COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
           COMPARABLE_PR_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $PR_VERSION)
           if ($GITHUB_WORKSPACE/scripts/ci/is_version_bump.sh $COMPARABLE_BASE_VERSION $COMPARABLE_PR_VERSION); then
-            echo "Version incremented in package.json. Exiting."
-            exit 0
+            echo "Version incremented in package.json."
           else
             echo "Error: The version in package.json has not been incremented."
             exit 1
@@ -58,8 +60,6 @@ jobs:
           MESSAGE="Error: The version in package.json has not been incremented."
           echo $MESSAGE
           echo "MESSAGE=$MESSAGE" >> $GITHUB_ENV
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Post comment
         if: ${{ failure() }}
