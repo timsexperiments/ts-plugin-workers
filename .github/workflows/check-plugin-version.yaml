@@ -16,13 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Check for "skip-version-bump" label
+      - name: Check for "skip-version-check" label
         id: check_label
         shell: bash
         run: |
-          LABEL=$(echo "${{ join(github.event.pull_request.labels.*.name) }}" | grep -o "skip-version-bump" || true)
-          if [[ "$LABEL" == "skip-version-bump" ]]; then
-            echo "Skip version bump label found. Exiting."
+          SKIP_VERSION_BUMP=${{contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
+          if $SKIP_VERSION_BUMP; then
+            echo "Skip version check label found."
             echo "SKIP=true" >> $GITHUB_ENV
           else
             echo "SKIP=false" >> $GITHUB_ENV

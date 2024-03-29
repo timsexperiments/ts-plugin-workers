@@ -20,8 +20,8 @@ jobs:
         id: check_label
         shell: bash
         run: |
-          SKIP_VERSION_BUMP=${{ contains(github.event.pull_request.labels.*.name, 'skip-version-bump') }}
-          if SKIP_VERSION_BUMP; then
+          SKIP_VERSION_BUMP=${{contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
+          if $SKIP_VERSION_BUMP; then
             echo "Skip version bump label found. Exiting."
             echo "SKIP=true" >> $GITHUB_ENV
           else
