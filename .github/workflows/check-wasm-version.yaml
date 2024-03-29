@@ -21,9 +21,7 @@ jobs:
           LABEL=$(echo "${{ join(github.event.pull_request.labels.*.name) }}" | grep -o "skip-version-bump" || true)
           if [[ "$LABEL" == "skip-version-bump" ]]; then
             echo "Skip version bump label found. Exiting."
-            echo "::set-output name=SKIP::yes"
-          else
-            echo "::set-output name=SKIP::no"
+            exit 0
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,11 +44,11 @@ jobs:
           COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
           COMPARABLE_PR_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $PR_VERSION)
           if ($GITHUB_WORKSPACE/scripts/ci/is_version_bump.sh $COMPARABLE_BASE_VERSION $COMPARABLE_PR_VERSION); then
-            echo "Error: The version in package.json has not been incremented."
-            exit 1
-          else
             echo "Version incremented in package.json. Exiting."
             exit 0
+          else
+            echo "Error: The version in package.json has not been incremented."
+            exit 1
           fi
 
       - name: Add comment if version is not incremented
