@@ -30,7 +30,7 @@ jobs:
 
       - name: Get base branch version
         shell: bash
-        if: ${{ steps.check_label.outputs.CONTINUE }} == true
+        if: steps.check_label.outputs.CONTINUE == true
         run: |
           echo ${{ steps.check_label.outputs.CONTINUE }}
           echo ${{ steps.check_label.outputs.CONTINUE == true }}
@@ -41,13 +41,13 @@ jobs:
 
       - name: Get PR branch version
         shell: bash
-        if: ${{ steps.check_label.outputs.CONTINUE }} == true
+        if: steps.check_label.outputs.CONTINUE == true
         run: |
           echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Check if version is bumped
         shell: bash
-        if: ${{ steps.check_label.outputs.CONTINUE }} == true
+        if: steps.check_label.outputs.CONTINUE == true
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
           COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
