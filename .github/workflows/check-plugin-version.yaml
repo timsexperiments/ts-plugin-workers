@@ -43,8 +43,7 @@ jobs:
         shell: bash
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
-          function version { echo "$@" | awk -F. "{ printf("%d%03d%03d", $1,$2,$3); }"; }
-          if [ $(version $PR_VERSION) -le $(version $BASE_VERSION) ]; then
+          function version { { IFS=. read -r major minor patch <<< "$1"; minor=$(printf "%05d" "$minor"); patch=$(printf "%05d" "$patch"); echo $major$minor$patch; } }          if [ $(version $PR_VERSION) -le $(version $BASE_VERSION) ]; then
             echo "Error: The version in package.json has not been incremented."
             exit 1
           else
