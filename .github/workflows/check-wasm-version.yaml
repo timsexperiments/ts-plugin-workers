@@ -33,18 +33,16 @@ jobs:
         run: |
           git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:package.json | node -p "require('./package.json').version")" >> $GITHUB_ENV
-          echo "Base version was $BASE_VERSION"
 
       - name: Get PR branch version
         shell: bash
         run: |
           echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-          echo "Base version was $BASE_VERSION"
-          echo "PR version was $BASE_VERSION"
 
       - name: Check if version is incremented
         shell: bash
         run: |
+          echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
           function version { echo "$@" | awk -F. "{ printf("%d%03d%03d", $1,$2,$3); }"; }
           if [ $(version $PR_VERSION) -le $(version $BASE_VERSION) ]; then
             echo "Error: The version in package.json has not been incremented."
