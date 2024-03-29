@@ -41,25 +41,25 @@ jobs:
         run: |
           echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
-      - name: Check if version is incremented
+      - name: Check if version is bumped
         if: ${{ ! env.SKIP }}
         shell: bash
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
           COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
           COMPARABLE_PR_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $PR_VERSION)
-          if ($GITHUB_WORKSPACE/scripts/ci/is_version_bump.sh $COMPARABLE_BASE_VERSION $COMPARABLE_PR_VERSION); then
-            echo "Version incremented in package.json."
+          if $COMPARABLE_BASE_VERSION -lt $COMPARABLE_PR_VERSION; then
+            echo "Version bumped in package.json."
           else
-            echo "Error: The version in package.json has not been incremented."
+            echo "Error: The version in package.json has not been bumped."
             exit 1
           fi
 
-      - name: Add comment if version is not incremented
+      - name: Add comment if version is not bumped
         if: ${{ failure() }}
         shell: bash
         run: |
-          MESSAGE="Error: The version in package.json has not been incremented."
+          MESSAGE="Error: The version in package.json has not been bumped."
           echo $MESSAGE
           echo "MESSAGE=$MESSAGE" >> $GITHUB_ENV
 
