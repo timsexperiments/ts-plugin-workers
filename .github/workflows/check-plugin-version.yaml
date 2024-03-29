@@ -35,7 +35,6 @@ jobs:
           echo ${{ steps.check_label.outputs.CONTINUE }}
           echo ${{ steps.check_label.outputs.CONTINUE == true }}
           echo ${{ steps.check_label.outputs.CONTINUE == 'true' }}
-          echo ${{ steps.check_label.outputs.CONTINUE -eq true }}
           git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:package.json | node -p "require('./package.json').version")" >> $GITHUB_ENV
 
