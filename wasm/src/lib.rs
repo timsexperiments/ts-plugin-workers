@@ -12,6 +12,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsValue;
 use workers::parse_toml;
 
+/// Generator for creating TypeScript type definitions based off of Cloudflare Worker Configs.
 #[wasm_bindgen]
 pub struct WorkerBindingGenerator {
     previous_definitions: String,
@@ -54,10 +55,15 @@ pub struct GenerateDefinitionsResponse {
 
 #[wasm_bindgen]
 impl GenerateDefinitionsResponse {
+    /// The string version of the typedef file.
     pub fn definitions(&self) -> String {
         self.definitions.to_owned()
     }
 
+    /// Whether the definitions have changed and should be updated.
+    ///
+    /// This is set when calling the generate_definitions function and applies
+    /// to the previous call to the function.
     pub fn should_update(&self) -> bool {
         self.should_update
     }

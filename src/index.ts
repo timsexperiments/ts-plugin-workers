@@ -10,6 +10,11 @@ type Config = {
   person: string;
 };
 
+/**
+ * Initializes the ts-plugin-workers typescript plugin.
+ *
+ * This should run the other workflows :) // DO NOT SUBMIT
+ */
 function init(_modules: { typescript: typeof ts }) {
   function create(info: ts.server.PluginCreateInfo) {
     const project = info.project;
