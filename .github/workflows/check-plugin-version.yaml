@@ -30,21 +30,21 @@ jobs:
 
       - name: Get base branch version
         shell: bash
-        if: steps.check_label.conclusion == 'failure'
+        if: steps.check_label.outcome == 'failure'
         run: |
           git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
           echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:package.json | node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Get PR branch version
         shell: bash
-        if: steps.check_label.conclusion == 'failure'
+        if: steps.check_label.outcome == 'failure'
         run: |
           echo "PR_VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Check if version is bumped
         id: check_bump
         shell: bash
-        if: steps.check_label.conclusion == 'failure'
+        if: steps.check_label.outcome == 'failure'
         run: |
           echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
           COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
