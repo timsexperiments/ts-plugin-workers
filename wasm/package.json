@@ -1,6 +1,6 @@
 {
   "name": "@timsexperiments/ts-plugin-workers-wasm",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "files": [
     "pkg/ts_plugin_workers_wasm_bg.wasm",
     "pkg/ts_plugin_workers_wasm.js",
