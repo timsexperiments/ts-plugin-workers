@@ -7,6 +7,7 @@
     "type": "git",
     "url": "https://github.com/timsexperiments/ts-plugin-workers.git"
   },
+  "homepage": "https://github.com/timsexperiments/ts-plugin-workers#readme",
   "keywords": [
     "cloudflare",
     "workers",
