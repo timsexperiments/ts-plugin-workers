@@ -26,8 +26,7 @@ jobs:
           else
             exit 1
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
 
       - name: Get base branch version
         shell: bash
@@ -55,17 +54,15 @@ jobs:
           fi
 
       - name: Add comment if version is not bumped
-        if: steps.check_bump.conclusion == 'failure'
+        if: failure()
         shell: bash
         run: |
           MESSAGE="Error: The version in package.json has not been bumped."
           echo $MESSAGE
           echo "MESSAGE=$MESSAGE" >> $GITHUB_ENV
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Post comment
-        if: steps.check_bump.conclusion == 'failure'
+        if: failure()
         uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
