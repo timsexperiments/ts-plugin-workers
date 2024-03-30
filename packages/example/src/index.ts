@@ -16,7 +16,11 @@ declare global {
 }
 
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+	async fetch(
+		_request: Request,
+		_env: Env,
+		_ctx: ExecutionContext,
+	): Promise<Response> {
 		return new Response('Hello World!');
 	},
 };

@@ -12,6 +12,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v3
+
+      - name: Install node packages
+        run: pnpm install
+
+      - name: Run linting checks
+        run: pnpm turbo lint
+
+      - name: Check formatting
+        run: |
+          pnpm run format:check
+          pnpm turbo format:check
+
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -19,36 +33,8 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
-
       - name: Install Wasm-pack for the wasm project
         run: cargo install wasm-pack
 
-      - name: Build @timsexperiments/ts-plugin-workers/wasm
-        run: |
-          cd wasm
-          bun run build
-
-      - name: Test @timsexperiments/ts-plugin-workers/wasm
-        run: |
-          cd wasm
-          cargo test
-
-      - name: Build @timsexperiments/ts-plugin-workers
-        run: |
-          bun install --frozen-lockfile
-          bun run build
-
-      - name: Setup example project
-        run: |
-          cd example
-          bun install --frozen-lockfile
-
-      - name: Lint with ESLint
-        run: |
-          bun run lint
-
-      - name: Check formatting with Prettier
-        run: |
-          bun run format:check
+      - name: Build all projects
+        run: pnpm turbo build

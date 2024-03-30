@@ -1,0 +1,20 @@
+{
+	"name": "example",
+	"private": true,
+	"author": "timsexperiments <tim@timsexperiments.foo>",
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"start": "wrangler dev",
+		"format:check": "prettier --check **/*.{ts,json}",
+		"lint": "eslint ."
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20230419.0",
+		"@timsexperiments/ts-plugin-workers": "workspace:*",
+		"eslint": "^8.57.0",
+		"eslint-config": "workspace:*",
+		"prettier": "^3.2.5",
+		"typescript": "^5.0.4",
+		"wrangler": "^3.0.0"
+	}
+}
