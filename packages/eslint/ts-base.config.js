@@ -5,7 +5,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   {
-    files: ['src/**/*.{ts,js}', 'eslint.config.mjs'],
+    files: ['src/**/*.{ts,js}'],
     languageOptions: {
       parser,
       parserOptions: {

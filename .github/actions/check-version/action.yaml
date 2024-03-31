@@ -1,0 +1,50 @@
+name: 'Publish to Docker'
+description: 'Pushes built artifacts to Docker'
+
+inputs:
+  project_path:
+    description: 'The base path to the project files.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check for "skip-version-check" label
+      id: check_label
+      shell: bash
+      run: |
+        SKIP_VERSION_BUMP=${{contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
+        if $SKIP_VERSION_BUMP; then
+          echo "Skip version check label found."
+        else
+          exit 1 
+        fi
+      continue-on-error: true
+
+    - name: Get base branch version
+      if: steps.check_label.outcome == 'failure'
+      shell: bash
+      run: |
+        git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+        echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:${{ inputs.project_path }}/package.json | node -p "require('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
+
+    - name: Get PR branch version
+      if: steps.check_label.outcome == 'failure'
+      shell: bash
+      run: |
+        echo "PR_VERSION=$(node -p "require('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
+
+    - name: Check if version is bumped
+      id: check_bump
+      if: steps.check_label.outcome == 'failure'
+      shell: bash
+      run: |
+        echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."
+        COMPARABLE_BASE_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $BASE_VERSION)
+        COMPARABLE_PR_VERSION=$($GITHUB_WORKSPACE/scripts/ci/parse_version.sh $PR_VERSION)
+        if $COMPARABLE_BASE_VERSION -lt $COMPARABLE_PR_VERSION; then
+          echo "Version bumped in package.json."
+        else
+          echo "Error: The version in package.json has not been bumped."
+          exit 1
+        fi

@@ -1,0 +1,36 @@
+{
+  "name": "@timsexperiments/ts-plugin-workers",
+  "version": "0.0.0",
+  "author": "timsexperiments <tim@timsexperiments.foo>",
+  "description": "A TypeScript server plugin for autogenerating Cloudflare Workers binding types from wrangler.toml configuration files",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/timsexperiments/ts-plugin-workers.git"
+  },
+  "homepage": "https://github.com/timsexperiments/ts-plugin-workers/plugin#readme",
+  "license": "MIT",
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "typescript",
+    "bindings",
+    "env"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "format:check": "prettier --check **/*.{ts,js,json}",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@timsexperiments/ts-plugin-workers-wasm": "workspace:*",
+    "typescript": "^5.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.2",
+    "eslint": "^8.57.0",
+    "eslint-config": "workspace:*",
+    "prettier": "^3.2.5"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outFile": "index.d.ts",
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["*.js"]
+}

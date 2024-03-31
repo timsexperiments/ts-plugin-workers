@@ -9,12 +9,6 @@
   "main": "pkg/ts_plugin_workers_wasm.js",
   "types": "pkg/ts_plugin_workers_wasm.d.ts",
   "scripts": {
-    "build": "wasm-pack build --target nodejs"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "build": "wasm-pack build --target nodejs && rm -rf pkg/package.json"
   }
 }

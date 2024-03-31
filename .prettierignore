@@ -1,6 +1,0 @@
-example/bindings.d.ts
-dist/
-pkg/
-node_modules/
-target/
-wasm/

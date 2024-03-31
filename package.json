@@ -1,39 +1,15 @@
 {
-  "name": "@timsexperiments/ts-plugin-workers",
+  "name": "ts-plugin-workers",
   "main": "dist/index.js",
-  "version": "0.0.0",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/timsexperiments/ts-plugin-workers.git"
-  },
-  "homepage": "https://github.com/timsexperiments/ts-plugin-workers#readme",
-  "keywords": [
-    "cloudflare",
-    "workers",
-    "typescript",
-    "bindings",
-    "env"
-  ],
+  "author": "timsexperiments <tim@timsexperiments.foo>",
+  "packageManager": "pnpm@8.15.5",
   "scripts": {
-    "build": "tsc",
-    "format:check": "prettier --check **/*.{ts,js}",
-    "lint": "eslint .",
-    "build:future": "bun build src/index.ts --outdir dist --format cjs"
-  },
-  "dependencies": {
-    "@timsexperiments/ts-plugin-workers-wasm": "file:./wasm",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
-    "typescript": "^5.4.2"
+    "format:check": "prettier --check **/*.{ts,js,json,yaml} --ignore-path base.prettierignore -u"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "@types/eslint": "^8.56.6",
-    "@typescript-eslint/parser": "^7.3.1",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "turbo": "^1.13.0",
+    "typescript": "^5.4.3"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
