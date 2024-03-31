@@ -5,38 +5,44 @@ inputs:
   project_path:
     description: 'The base path to the project files.'
     required: true
+  source_path:
+    description: 'The path of the source content for the package.'
+    required: false
+    default: src
 
 runs:
   using: 'composite'
   steps:
+    - name: Check for src changes
+      id: check-src
+      uses: ./.github/actions/check-changes
+      with:
+        path: ${{ inputs.project_path }}/${{ inputs.source_path }}
+
     - name: Check for "skip-version-check" label
-      id: check_label
+      id: check-label
+      if: steps.check-src.outputs.found-changes == 0
       shell: bash
       run: |
-        SKIP_VERSION_BUMP=${{contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}
-        if $SKIP_VERSION_BUMP; then
-          echo "Skip version check label found."
-        else
-          exit 1 
-        fi
-      continue-on-error: true
+        SKIP="${{ contains(github.event.pull_request.labels.*.name, 'skip-version-check') }}"
+        echo "skip-checks=$(echo $SKIP)" >> $GITHUB_OUTPUT
 
     - name: Get base branch version
-      if: steps.check_label.outcome == 'failure'
+      if: steps.check-label.outputs.skip-checks == 'false'
       shell: bash
       run: |
         git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
         echo "BASE_VERSION=$(git show origin/${{ github.base_ref }}:${{ inputs.project_path }}/package.json | node -p "require('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
 
     - name: Get PR branch version
-      if: steps.check_label.outcome == 'failure'
+      if: steps.check-label.outputs.skip-checks == 'false'
       shell: bash
       run: |
-        echo "PR_VERSION=$(node -p "require('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
+        echo "PR_VERSION=$(node -p "okrequire('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
 
     - name: Check if version is bumped
       id: check_bump
-      if: steps.check_label.outcome == 'failure'
+      if: steps.check-label.outputs.skip-checks == 'false'
       shell: bash
       run: |
         echo "Comparing base version $BASE_VERSION to the current version $PR_VERSION."

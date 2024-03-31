@@ -1,5 +1,5 @@
-name: 'Publish to Docker'
-description: 'Pushes built artifacts to Docker'
+name: 'Publish to NPM'
+description: 'Published package to npmjs.com based on the project path.'
 
 inputs:
   project_path:
@@ -22,10 +22,15 @@ runs:
       shell: bash
       run: pnpm turbo build
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+        registry-url: 'https://registry.npmjs.org'
+
     - name: Publish dependencies
       shell: bash
-      run: |
-        cd ${{ inputs.project_path }}
-        pnpm publish --access=public
+      working-directory: ${{ inputs.project_path }}
+      run: npm publish --access=public --no-git-checks
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}

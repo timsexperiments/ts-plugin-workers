@@ -21,12 +21,14 @@ jobs:
         with:
           project_path: packages/wasm
 
+      - name: Set up wasm-pack
+        uses: ./.github/actions/wasm-pack/setup
+
       - name: Publish @timsexperiments/ts-plugin-workers-wasm
         uses: ./.github/actions/publish
         with:
           project_path: packages/wasm
-        secrets:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm_token: ${{ secrets.NPM_TOKEN }}
 
   publish-plugin:
     if: github.event.pull_request.merged == true

@@ -1,0 +1,16 @@
+name: 'Setup Wasm Pack'
+description: 'Sets up rust and installs wasm-pack crate.'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+
+    - name: Install Wasm-pack for the wasm project
+      shell: bash
+      run: cargo install wasm-pack
