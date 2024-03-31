@@ -1,0 +1,31 @@
+name: 'Publish to Docker'
+description: 'Pushes built artifacts to Docker'
+
+inputs:
+  project_path:
+    description: 'The base path to the project files.'
+    required: true
+  npm_token:
+    description: 'The NPM token to publish the project to the npmjs directory.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: pnpm/action-setup@v3
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install
+
+    - name: Build packages
+      shell: bash
+      run: pnpm turbo build
+
+    - name: Publish dependencies
+      shell: bash
+      run: |
+        cd ${{ inputs.project_path }}
+        pnpm publish --access=public
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}

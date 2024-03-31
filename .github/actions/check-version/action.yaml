@@ -1,5 +1,5 @@
-name: 'Publish to Docker'
-description: 'Pushes built artifacts to Docker'
+name: 'Check Version Bump'
+description: 'Checks if the package.json was bumped from the previous version.'
 
 inputs:
   project_path:
