@@ -1,0 +1,36 @@
+name: 'Publish to NPM'
+description: 'Published package to npmjs.com based on the project path.'
+
+inputs:
+  project_path:
+    description: 'The base path to the project files.'
+    required: true
+  npm_token:
+    description: 'The NPM token to publish the project to the npmjs directory.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: pnpm/action-setup@v3
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install
+
+    - name: Build packages
+      shell: bash
+      run: pnpm turbo build
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Publish dependencies
+      shell: bash
+      working-directory: ${{ inputs.project_path }}
+      run: npm publish --access=public --no-git-checks
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}

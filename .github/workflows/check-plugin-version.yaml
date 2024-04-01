@@ -2,8 +2,6 @@ name: TS Plugin Workers Package Version Check
 
 on:
   pull_request:
-    paths:
-      - 'packages/plugin/src/**'
     branches: [main]
     types: [opened, synchronize, labeled, unlabeled]
   workflow_dispatch:

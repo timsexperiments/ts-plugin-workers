@@ -26,15 +26,8 @@ jobs:
           pnpm run format:check
           pnpm turbo format:check
 
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-
-      - name: Install Wasm-pack for the wasm project
-        run: cargo install wasm-pack
+      - name: Set up wasm-pack
+        uses: ./.github/actions/wasm-pack/setup
 
       - name: Build all projects
         run: pnpm turbo build
