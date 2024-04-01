@@ -10,6 +10,11 @@ inputs:
     required: false
     default: src
 
+outputs:
+  bumped:
+    description: 'Whether the version was bumped.'
+    value: ${{ steps.set-output.outputs.bumped }}
+
 runs:
   using: 'composite'
   steps:
@@ -38,7 +43,19 @@ runs:
       if: steps.check-label.outputs.skip-checks == 'false'
       shell: bash
       run: |
-        echo "PR_VERSION=$(node -p "okrequire('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
+        echo "PR_VERSION=$(node -p "require('./${{ inputs.project_path }}/package.json').version")" >> $GITHUB_ENV
+
+    - name: Set output
+      id: set-output
+      shell: bash
+      run: |
+        echo "bumped=0" >> $GITHUB_OUTPUT
+        if ${{ steps.check-src }} == 0; then
+          echo "bumped=1" >> $GITHUB_OUTPUT
+        fi
+        if ${{ steps.check-label.outputs.skip-checks }} == true; then
+          echo "bumped=1" >> $GITHUB_OUTPUT
+        fi
 
     - name: Check if version is bumped
       id: check_bump
