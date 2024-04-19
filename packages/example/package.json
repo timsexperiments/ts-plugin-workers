@@ -12,7 +12,7 @@
 		"@cloudflare/workers-types": "^4.20230419.0",
 		"@timsexperiments/ts-plugin-workers": "workspace:*",
 		"eslint": "^8.57.0",
-		"eslint-config": "workspace:*",
+		"@timsexperiments/ts-plugin-workers-eslint": "workspace:*",
 		"prettier": "^3.2.5",
 		"typescript": "^5.0.4",
 		"wrangler": "^3.0.0"

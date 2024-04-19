@@ -1,6 +1,6 @@
 {
   "name": "@timsexperiments/ts-plugin-workers",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "author": "timsexperiments <tim@timsexperiments.foo>",
   "description": "A TypeScript server plugin for autogenerating Cloudflare Workers binding types from wrangler.toml configuration files",
   "repository": {
@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/node": "^20.12.2",
     "eslint": "^8.57.0",
-    "eslint-config": "workspace:*",
+    "@timsexperiments/ts-plugin-workers-eslint": "workspace:*",
     "prettier": "^3.2.5"
   }
 }

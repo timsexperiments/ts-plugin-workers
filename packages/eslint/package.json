@@ -1,6 +1,6 @@
 {
-  "name": "eslint-config",
-  "private": true,
+  "name": "@timsexperiments/ts-plugin-workers-eslint",
+  "version": "0.0.2",
   "author": "timsexperiments <tim@timsexperiments.foo>",
   "files": [
     "ts-base.config.js"

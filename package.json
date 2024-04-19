@@ -4,11 +4,12 @@
   "author": "timsexperiments <tim@timsexperiments.foo>",
   "packageManager": "pnpm@8.15.5",
   "scripts": {
+    "build": "turbo build",
     "format:check": "prettier --check **/*.{ts,js,json,yaml} --ignore-path base.prettierignore -u"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
-    "turbo": "^1.13.0",
+    "turbo": "^1.13.2",
     "typescript": "^5.4.3"
   },
   "peerDependencies": {
